@@ -46,17 +46,3 @@ func (nr *notificationsRouter_pg) ShowNotification(c echo.Context) error {
 	results := Response_Notifications{Error: boolerror, DataError: dataerror, Data: data}
 	return c.JSON(status, results)
 }
-
-func (nr *notificationsRouter_pg) UpdateNotifications(c echo.Context) error {
-
-	user_string := c.Request().URL.Query().Get("user")
-	user_int, _ := strconv.Atoi(user_string)
-
-	type_string := c.Request().URL.Query().Get("type")
-	type_int, _ := strconv.Atoi(type_string)
-
-	//Enviamos los datos al servicio
-	status, boolerror, dataerror, data := UpdateNotifications_Service(user_int, type_int)
-	results := Response{Error: boolerror, DataError: dataerror, Data: data}
-	return c.JSON(status, results)
-}

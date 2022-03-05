@@ -25,10 +25,9 @@ type Mo_Notifications struct {
 }
 
 type Mo_NotificationShow struct {
-	ID             primitive.ObjectID `bson:"_id,omitempty" json:"id"`
-	Message        string             `bson:"message" json:"message,omitempty"`
-	DateRegistered time.Time          `bson:"dateregistered" json:"dateregistered,omitempty"`
-	WasView        bool               `bson:"wasview" json:"wasview,omitempty"`
+	Message  string `bson:"message" json:"message,omitempty"`
+	IDUser   int    `bson:"iduser" json:"iduser,omitempty"`
+	TypeUser int    `bson:"typeuser" json:"typeuser,omitempty"`
 }
 
 type Mo_TipsShow struct {
