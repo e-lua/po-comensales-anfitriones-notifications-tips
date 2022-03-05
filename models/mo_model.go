@@ -13,6 +13,7 @@ type Mo_Tips struct {
 	URLimg         string             `bson:"urlimg" json:"urlimg,omitempty"`
 	DateRegistered time.Time          `bson:"dateregistered" json:"dateregistered,omitempty"`
 	TypeUser       int                `bson:"typeuser" json:"typeuser,omitempty"`
+	Typetip        int                `bson:"typetip" json:"typetip,omitempty"`
 }
 
 type Mo_Notifications struct {

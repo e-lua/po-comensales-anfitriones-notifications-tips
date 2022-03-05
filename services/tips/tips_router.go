@@ -25,7 +25,7 @@ func (tr *tipsRouter_pg) AddTip(c echo.Context) error {
 	}
 
 	//Validamos los valores enviados
-	if len(tip.URLimg) < 5 || tip.TypeUser != 1 && tip.TypeUser != 2 && tip.TypeUser != 3 {
+	if len(tip.URLimg) < 5 || tip.Typetip < 0 || tip.TypeUser != 1 && tip.TypeUser != 2 && tip.TypeUser != 3 {
 		results := Response{Error: true, DataError: "El valor ingresado no cumple con la regla de negocio", Data: ""}
 		return c.JSON(403, results)
 	}
