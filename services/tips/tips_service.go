@@ -3,11 +3,15 @@ package tips
 import (
 
 	//REPOSITORIES
+	"time"
+
 	models "github.com/Aphofisis/po-comensales-anfitriones-notifications-tips/models"
 	tips_repository "github.com/Aphofisis/po-comensales-anfitriones-notifications-tips/repositories/tips"
 )
 
 func AddTip_Service(tip_input models.Mo_Tips) (int, bool, string, string) {
+
+	tip_input.DateRegistered = time.Now()
 
 	//Obtenemos las categorias
 	error_update := tips_repository.Mo_Add(tip_input)

@@ -3,11 +3,16 @@ package notifications
 import (
 
 	//REPOSITORIES
+	"time"
+
 	models "github.com/Aphofisis/po-comensales-anfitriones-notifications-tips/models"
 	notification_repository "github.com/Aphofisis/po-comensales-anfitriones-notifications-tips/repositories/notifications"
 )
 
 func AddNotification_Service(notification models.Mo_Notifications) (int, bool, string, string) {
+
+	notification.DateRegistered = time.Now()
+	notification.WasView = false
 
 	//Obtenemos las categorias
 	error_update := notification_repository.Mo_Add(notification)

@@ -24,6 +24,12 @@ func (nr *notificationsRouter_pg) AddNotification(c echo.Context) error {
 		return c.JSON(400, results)
 	}
 
+	//Validamos los valores enviados
+	if len(notification.Message) < 5 || notification.IDUser < 0 || notification.TypeUser < 0 {
+		results := Response{Error: true, DataError: "El valor ingresado no cumple con la regla de negocio", Data: ""}
+		return c.JSON(403, results)
+	}
+
 	//Enviamos los datos al servicio
 	status, boolerror, dataerror, data := AddNotification_Service(notification)
 	results := Response{Error: boolerror, DataError: dataerror, Data: data}
