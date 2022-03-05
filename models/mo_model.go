@@ -32,8 +32,7 @@ type Mo_NotificationShow struct {
 }
 
 type Mo_TipsShow struct {
-	ID             primitive.ObjectID `bson:"_id,omitempty" json:"id"`
-	URLimg         string             `bson:"urlimg" json:"urlimg,omitempty"`
-	DateRegistered time.Time          `bson:"dateregistered" json:"dateregistered,omitempty"`
-	TypeUser       int                `bson:"typeuser" json:"typeuser,omitempty"`
+	ID      primitive.ObjectID `bson:"_id,omitempty" json:"id"`
+	URLimg  string             `bson:"urlimg" json:"urlimg,omitempty"`
+	Typetip int                `bson:"typetip" json:"typetip,omitempty"`
 }

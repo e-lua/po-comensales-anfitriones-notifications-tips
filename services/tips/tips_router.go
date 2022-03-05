@@ -38,7 +38,7 @@ func (tr *tipsRouter_pg) AddTip(c echo.Context) error {
 
 func (tr *tipsRouter_pg) ShowTips(c echo.Context) error {
 
-	type_string := c.Request().URL.Query().Get("type")
+	type_string := c.Request().URL.Query().Get("typeuser")
 	type_int, _ := strconv.Atoi(type_string)
 
 	//Enviamos los datos al servicio
