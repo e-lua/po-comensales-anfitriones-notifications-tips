@@ -42,9 +42,9 @@ func (nr *notificationsRouter_pg) ShowNotification(c echo.Context) error {
 	user_int, _ := strconv.Atoi(user_string)
 
 	page_string := c.Request().URL.Query().Get("page")
-	page_int, _ := strconv.Atoi(page_string)
+	page_int, _ := strconv.ParseInt(page_string, 10, 64)
 
-	type_string := c.Request().URL.Query().Get("type")
+	type_string := c.Request().URL.Query().Get("typeuser")
 	type_int, _ := strconv.Atoi(type_string)
 
 	//Enviamos los datos al servicio
