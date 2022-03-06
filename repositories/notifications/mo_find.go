@@ -25,10 +25,7 @@ func Mo_Find(iduser int, pagina int64, typeuser int) ([]*models.Mo_NotificationS
 
 	condicion := bson.M{
 		"typeuser": typeuser,
-		"$and": []interface{}{
-			bson.M{"iduser": iduser},
-			bson.M{"iduser": 0},
-		},
+		"iduser":   iduser,
 	}
 
 	opciones := options.Find()
