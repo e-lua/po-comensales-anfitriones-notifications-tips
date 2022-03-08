@@ -28,7 +28,7 @@ type Mo_Notifications struct {
 type Mo_NotificationShow struct {
 	Message string `bson:"message" json:"message,omitempty"`
 	IDUser  int    `bson:"iduser" json:"iduser,omitempty"`
-	WasView bool   `bson:"wasview" json:"wasview,omitempty"`
+	WasView bool   `bson:"wasview" json:"wasview"`
 }
 
 type Mo_TipsShow struct {
