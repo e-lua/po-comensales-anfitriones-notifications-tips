@@ -1,6 +1,8 @@
 package notifications
 
 import (
+	"encoding/json"
+	"net/http"
 	"strconv"
 
 	"github.com/Aphofisis/po-comensales-anfitriones-notifications-tips/models"
@@ -11,6 +13,20 @@ var NotificationsRouter_pg *notificationsRouter_pg
 
 type notificationsRouter_pg struct {
 }
+
+/*-------------------------------*/
+func GetJWT(jwt string, service int, module int, epic int, endpoint int) (int, bool, string, int) {
+	//Obtenemos los datos del auth
+	respuesta, _ := http.Get("http://a-registro-authenticacion.restoner-api.fun:5000/v1/trylogin?jwt=" + jwt + "&service=" + strconv.Itoa(service) + "&module=" + strconv.Itoa(module) + "&epic=" + strconv.Itoa(epic) + "&endpoint=" + strconv.Itoa(endpoint))
+	var get_respuesta ResponseJWT
+	error_decode_respuesta := json.NewDecoder(respuesta.Body).Decode(&get_respuesta)
+	if error_decode_respuesta != nil {
+		return 500, true, "Error en el sevidor interno al intentar decodificar la autenticacion, detalles: " + error_decode_respuesta.Error(), 0
+	}
+	return 200, false, "", get_respuesta.Data.IdBusiness
+}
+
+/*-------------------------------*/
 
 func (nr *notificationsRouter_pg) AddNotification(c echo.Context) error {
 
@@ -50,5 +66,27 @@ func (nr *notificationsRouter_pg) ShowNotification(c echo.Context) error {
 	//Enviamos los datos al servicio
 	status, boolerror, dataerror, data := ShowNotification_Service(user_int, page_int, type_int)
 	results := Response_Notifications{Error: boolerror, DataError: dataerror, Data: data}
+	return c.JSON(status, results)
+}
+
+func (nr *notificationsRouter_pg) UpdateNotification(c echo.Context) error {
+
+	//Obtenemos los datos del auth
+	status, boolerror, dataerror, data_idbusiness := GetJWT(c.Request().Header.Get("Authorization"), 2, 2, 1, 10)
+	if dataerror != "" {
+		results := Response{Error: boolerror, DataError: "000" + dataerror, Data: ""}
+		return c.JSON(status, results)
+	}
+	if data_idbusiness <= 0 {
+		results := Response{Error: true, DataError: "000" + "Token incorrecto", Data: ""}
+		return c.JSON(400, results)
+	}
+
+	type_string := c.Request().URL.Query().Get("typeuser")
+	type_int, _ := strconv.Atoi(type_string)
+
+	//Enviamos los datos al servicio
+	status, boolerror, dataerror, data := UpdateNotification_Service(data_idbusiness, type_int)
+	results := Response{Error: boolerror, DataError: dataerror, Data: data}
 	return c.JSON(status, results)
 }

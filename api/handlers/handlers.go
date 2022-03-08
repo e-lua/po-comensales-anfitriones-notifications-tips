@@ -35,6 +35,7 @@ func Manejadores() {
 	router_notification := version_1.Group("/notification")
 	router_notification.POST("", notification.NotificationsRouter_pg.AddNotification)
 	router_notification.GET("", notification.NotificationsRouter_pg.ShowNotification)
+	router_notification.PUT("", notification.NotificationsRouter_pg.UpdateNotification)
 
 	//Abrimos el puerto
 	PORT := os.Getenv("PORT")

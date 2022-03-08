@@ -13,3 +13,16 @@ type Response_Notifications struct {
 	DataError string                       `json:"dataError"`
 	Data      []models.Mo_NotificationShow `json:"data"`
 }
+
+type ResponseJWT struct {
+	Error     bool   `json:"error"`
+	DataError string `json:"dataError"`
+	Data      JWT    `json:"data"`
+}
+
+type JWT struct {
+	IdBusiness int `json:"idBusiness"`
+	IdWorker   int `json:"idWorker"`
+	IdCountry  int `json:"country"`
+	IdRol      int `json:"rol"`
+}
