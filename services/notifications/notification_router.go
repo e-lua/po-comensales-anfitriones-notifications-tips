@@ -68,25 +68,3 @@ func (nr *notificationsRouter_pg) ShowNotification(c echo.Context) error {
 	results := Response_Notifications{Error: boolerror, DataError: dataerror, Data: data}
 	return c.JSON(status, results)
 }
-
-func (nr *notificationsRouter_pg) UpdateNotification(c echo.Context) error {
-
-	//Obtenemos los datos del auth
-	status, boolerror, dataerror, data_idbusiness := GetJWT(c.Request().Header.Get("Authorization"), 2, 2, 1, 10)
-	if dataerror != "" {
-		results := Response{Error: boolerror, DataError: "000" + dataerror, Data: ""}
-		return c.JSON(status, results)
-	}
-	if data_idbusiness <= 0 {
-		results := Response{Error: true, DataError: "000" + "Token incorrecto", Data: ""}
-		return c.JSON(400, results)
-	}
-
-	type_string := c.Request().URL.Query().Get("typeuser")
-	type_int, _ := strconv.Atoi(type_string)
-
-	//Enviamos los datos al servicio
-	status, boolerror, dataerror, data := UpdateNotification_Service(data_idbusiness, type_int)
-	results := Response{Error: boolerror, DataError: dataerror, Data: data}
-	return c.JSON(status, results)
-}
