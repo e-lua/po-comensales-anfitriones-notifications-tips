@@ -27,7 +27,7 @@ func Mo_Update(iduser int, typeuser int) error {
 
 	filtro := bson.M{"iduser": iduser, "typeuser": typeuser}
 
-	_, error_update := col.UpdateOne(ctx, filtro, updtString)
+	_, error_update := col.UpdateMany(ctx, filtro, updtString)
 
 	if error_update != nil {
 		return error_update

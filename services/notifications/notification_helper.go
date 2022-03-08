@@ -9,7 +9,7 @@ type Response struct {
 }
 
 type Response_Notifications struct {
-	Error     bool                          `json:"error"`
-	DataError string                        `json:"dataError"`
-	Data      []*models.Mo_NotificationShow `json:"data"`
+	Error     bool                         `json:"error"`
+	DataError string                       `json:"dataError"`
+	Data      []models.Mo_NotificationShow `json:"data"`
 }
