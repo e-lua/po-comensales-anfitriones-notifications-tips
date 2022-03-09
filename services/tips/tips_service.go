@@ -11,7 +11,12 @@ import (
 
 func AddTip_Service(tip_input models.Mo_Tips) (int, bool, string, string) {
 
+	var array_int []int
+	array_int = append(array_int, 0)
+	array_int = append(array_int, 0)
+
 	tip_input.DateRegistered = time.Now()
+	tip_input.ViewBusiness = array_int
 
 	//Obtenemos las categorias
 	error_update := tips_repository.Mo_Add(tip_input)
