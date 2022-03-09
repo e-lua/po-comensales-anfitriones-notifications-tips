@@ -3,8 +3,11 @@ package notifications
 import (
 
 	//REPOSITORIES
-	"fmt"
+
+	"encoding/json"
 	"log"
+	"net/http"
+	"strconv"
 	"time"
 
 	"gopkg.in/maddevsio/fcm.v1"
@@ -24,32 +27,38 @@ func AddNotification_Service(notification models.Mo_Notifications) (int, bool, s
 		return 500, true, "Error en el servidor interno al intentar agregar el Notificacion, detalles: " + error_update.Error(), ""
 	}
 
-	/*=============FIREBASE CLOUD MESSAGE=============*/
-	data := map[string]string{
-		"msg": "Hello World1",
-		"sum": "Happy Day",
-	}
-	c := fcm.NewFCM("AAAAnX6Cb1g:APA91bESe-FuIIH2z_lv6JvWQX-r5hz_Ta6jRii-TwBZnqZQZBgSz9rSo5TIybr0RkznoQkY21WoA1yrdQUo0IuUWiZrrAIDLxzva5BZEoF4z5UPVIyFTv1-87_c8p_u3EDD93GiGQvf")
-	response, err := c.Send(fcm.Message{
-		Data:             data,
-		RegistrationIDs:  []string{"cxHlE6xFNYZpJJPD5Cz8JA:APA91bELN9h25_QCCCxa3RqQz49dASYlXHBGexgup7kFQyD8aDRiDcqDhQciFeCusSFUEX0UgTv3XWDxbKe2TZUtRgRU7nPfjLl8uWQTAovia3fJVhODnc_9NG9b0Bv3iepipAJUOouc"},
-		ContentAvailable: true,
-		Priority:         fcm.PriorityHigh,
-		Notification: fcm.Notification{
-			Title: "Hello",
-			Body:  "World",
-		},
-	})
-	if err != nil {
-		log.Fatal("Error en la conexión con Firebase Cloud Message, detalles: " + err.Error())
-	}
-	/*======================================*/
+	if notification.Priority == 1 && notification.TypeUser == 1 {
 
-	fmt.Println("Status Code   :", response.StatusCode)
-	fmt.Println("Success       :", response.Success)
-	fmt.Println("Fail          :", response.Fail)
-	fmt.Println("Canonical_ids :", response.CanonicalIDs)
-	fmt.Println("Topic MsgId   :", response.MsgID)
+		//Obtenemos los datos del auth
+		respuesta, _ := http.Get("http://a-registro-authenticacion.restoner-api.fun:5000/v1/export/" + strconv.Itoa(notification.IDUser))
+		var get_respuesta Income_IDDevice
+		error_decode_respuesta := json.NewDecoder(respuesta.Body).Decode(&get_respuesta)
+		if error_decode_respuesta != nil {
+			return 500, true, "Error en el sevidor interno al intentar obtener todos los ID Device, detalles: " + error_decode_respuesta.Error(), ""
+		}
+
+		/*=============FIREBASE CLOUD MESSAGE=============*/
+		data := map[string]string{
+			"msg": "Hello World1",
+			"sum": "Happy Day",
+		}
+		c := fcm.NewFCM("AAAAnX6Cb1g:APA91bESe-FuIIH2z_lv6JvWQX-r5hz_Ta6jRii-TwBZnqZQZBgSz9rSo5TIybr0RkznoQkY21WoA1yrdQUo0IuUWiZrrAIDLxzva5BZEoF4z5UPVIyFTv1-87_c8p_u3EDD93GiGQvf")
+		_, err := c.Send(fcm.Message{
+			Data:             data,
+			RegistrationIDs:  get_respuesta.Data,
+			ContentAvailable: true,
+			Priority:         fcm.PriorityHigh,
+			Notification: fcm.Notification{
+				Title: "Hello",
+				Body:  "World",
+			},
+		})
+		if err != nil {
+			log.Fatal("Error en la conexión con Firebase Cloud Message, detalles: " + err.Error())
+		}
+		/*===============================================*/
+
+	}
 
 	return 201, false, "", "Notificacion agregado correctamente"
 }

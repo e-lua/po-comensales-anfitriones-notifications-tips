@@ -26,3 +26,9 @@ type JWT struct {
 	IdCountry  int `json:"country"`
 	IdRol      int `json:"rol"`
 }
+
+type Income_IDDevice struct {
+	Error     bool     `json:"error"`
+	DataError string   `json:"dataError"`
+	Data      []string `json:"data"`
+}

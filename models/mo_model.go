@@ -22,6 +22,7 @@ type Mo_Notifications struct {
 	Message        string             `bson:"message" json:"message,omitempty"`
 	DateRegistered time.Time          `bson:"dateregistered" json:"dateregistered,omitempty"`
 	IDUser         int                `bson:"iduser" json:"iduser,omitempty"`
+	Priority       int                `bson:"priority" json:"priority"`
 	WasView        bool               `bson:"wasview" json:"wasview,omitempty"`
 	TypeUser       int                `bson:"typeuser" json:"typeuser,omitempty"`
 }
