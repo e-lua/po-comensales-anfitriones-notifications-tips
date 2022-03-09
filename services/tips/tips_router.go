@@ -1,6 +1,8 @@
 package tips
 
 import (
+	"encoding/json"
+	"net/http"
 	"strconv"
 
 	"github.com/Aphofisis/po-comensales-anfitriones-notifications-tips/models"
@@ -11,6 +13,20 @@ var TipsRouter_pg *tipsRouter_pg
 
 type tipsRouter_pg struct {
 }
+
+/*----------------------TRAEMOS LOS DATOS DEL AUTENTICADOR----------------------*/
+func GetJWT(jwt string, service int, module int, epic int, endpoint int) (int, bool, string, int) {
+	//Obtenemos los datos del auth
+	respuesta, _ := http.Get("http://a-registro-authenticacion.restoner-api.fun:5000/v1/trylogin?jwt=" + jwt + "&service=" + strconv.Itoa(service) + "&module=" + strconv.Itoa(module) + "&epic=" + strconv.Itoa(epic) + "&endpoint=" + strconv.Itoa(endpoint))
+	var get_respuesta ResponseJWT
+	error_decode_respuesta := json.NewDecoder(respuesta.Body).Decode(&get_respuesta)
+	if error_decode_respuesta != nil {
+		return 500, true, "Error en el sevidor interno al intentar decodificar la autenticacion, detalles: " + error_decode_respuesta.Error(), 0
+	}
+	return 200, false, "", get_respuesta.Data.IdBusiness
+}
+
+/*------------------------------------------------------------------*/
 
 func (tr *tipsRouter_pg) AddTip(c echo.Context) error {
 
@@ -38,39 +54,22 @@ func (tr *tipsRouter_pg) AddTip(c echo.Context) error {
 
 func (tr *tipsRouter_pg) ShowTipsAll(c echo.Context) error {
 
+	//Obtenemos los datos del auth
+	status, boolerror, dataerror, data_idbusiness := GetJWT(c.Request().Header.Get("Authorization"), 2, 2, 1, 4)
+	if dataerror != "" {
+		results := Response{Error: boolerror, DataError: "000" + dataerror, Data: ""}
+		return c.JSON(status, results)
+	}
+	if data_idbusiness <= 0 {
+		results := Response{Error: true, DataError: "000" + "Token incorrecto", Data: ""}
+		return c.JSON(400, results)
+	}
+
 	type_string := c.Request().URL.Query().Get("typeuser")
 	type_int, _ := strconv.Atoi(type_string)
 
 	//Enviamos los datos al servicio
-	status, boolerror, dataerror, data := ShowTipsAll_Service(type_int)
+	status, boolerror, dataerror, data := ShowTipsAll_Service(data_idbusiness, type_int)
 	results := Response_Tips{Error: boolerror, DataError: dataerror, Data: data}
-	return c.JSON(status, results)
-}
-
-func (tr *tipsRouter_pg) ShowTipsNew(c echo.Context) error {
-
-	user_string := c.Request().URL.Query().Get("user")
-	user_int, _ := strconv.Atoi(user_string)
-
-	type_string := c.Request().URL.Query().Get("typeuser")
-	type_int, _ := strconv.Atoi(type_string)
-
-	//Enviamos los datos al servicio
-	status, boolerror, dataerror, data := ShowTipsNew_Service(user_int, type_int)
-	results := Response_Tips{Error: boolerror, DataError: dataerror, Data: data}
-	return c.JSON(status, results)
-}
-
-func (tr *tipsRouter_pg) UpdateViewTip(c echo.Context) error {
-
-	user_string := c.Request().URL.Query().Get("user")
-	user_int, _ := strconv.Atoi(user_string)
-
-	type_string := c.Request().URL.Query().Get("typeuser")
-	type_int, _ := strconv.Atoi(type_string)
-
-	//Enviamos los datos al servicio
-	status, boolerror, dataerror, data := UpdateViewTip_Service(user_int, type_int)
-	results := Response{Error: boolerror, DataError: dataerror, Data: data}
 	return c.JSON(status, results)
 }
