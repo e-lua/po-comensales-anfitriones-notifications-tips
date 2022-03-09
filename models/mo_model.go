@@ -14,6 +14,7 @@ type Mo_Tips struct {
 	DateRegistered time.Time          `bson:"dateregistered" json:"dateregistered,omitempty"`
 	TypeUser       int                `bson:"typeuser" json:"typeuser,omitempty"`
 	Typetip        int                `bson:"typetip" json:"typetip,omitempty"`
+	ViewBusiness   []int              `bson:"viewbusiness" json:"viewbusiness,"`
 }
 
 type Mo_Notifications struct {

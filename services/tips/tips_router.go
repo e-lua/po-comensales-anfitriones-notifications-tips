@@ -36,13 +36,41 @@ func (tr *tipsRouter_pg) AddTip(c echo.Context) error {
 	return c.JSON(status, results)
 }
 
-func (tr *tipsRouter_pg) ShowTips(c echo.Context) error {
+func (tr *tipsRouter_pg) ShowTipsAll(c echo.Context) error {
 
 	type_string := c.Request().URL.Query().Get("typeuser")
 	type_int, _ := strconv.Atoi(type_string)
 
 	//Enviamos los datos al servicio
-	status, boolerror, dataerror, data := ShowTips_Service(type_int)
+	status, boolerror, dataerror, data := ShowTipsAll_Service(type_int)
 	results := Response_Tips{Error: boolerror, DataError: dataerror, Data: data}
+	return c.JSON(status, results)
+}
+
+func (tr *tipsRouter_pg) ShowTipsNew(c echo.Context) error {
+
+	user_string := c.Request().URL.Query().Get("user")
+	user_int, _ := strconv.Atoi(user_string)
+
+	type_string := c.Request().URL.Query().Get("typeuser")
+	type_int, _ := strconv.Atoi(type_string)
+
+	//Enviamos los datos al servicio
+	status, boolerror, dataerror, data := ShowTipsNew_Service(user_int, type_int)
+	results := Response_Tips{Error: boolerror, DataError: dataerror, Data: data}
+	return c.JSON(status, results)
+}
+
+func (tr *tipsRouter_pg) UpdateViewTip(c echo.Context) error {
+
+	user_string := c.Request().URL.Query().Get("user")
+	user_int, _ := strconv.Atoi(user_string)
+
+	type_string := c.Request().URL.Query().Get("typeuser")
+	type_int, _ := strconv.Atoi(type_string)
+
+	//Enviamos los datos al servicio
+	status, boolerror, dataerror, data := UpdateViewTip_Service(user_int, type_int)
+	results := Response{Error: boolerror, DataError: dataerror, Data: data}
 	return c.JSON(status, results)
 }

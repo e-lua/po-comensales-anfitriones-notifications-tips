@@ -29,7 +29,9 @@ func Manejadores() {
 	//V1 FROM V1 TO ...TO ENTITY TIP
 	router_tip := version_1.Group("/tip")
 	router_tip.POST("", tip.TipsRouter_pg.AddTip)
-	router_tip.GET("", tip.TipsRouter_pg.ShowTips)
+	router_tip.PUT("", tip.TipsRouter_pg.UpdateViewTip)
+	router_tip.GET("/all", tip.TipsRouter_pg.ShowTipsAll)
+	router_tip.GET("/new", tip.TipsRouter_pg.ShowTipsNew)
 
 	//V1 FROM V1 TO ...TO ENTITY TIP
 	router_notification := version_1.Group("/notification")
