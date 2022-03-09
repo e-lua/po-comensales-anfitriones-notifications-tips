@@ -3,7 +3,10 @@ package notifications
 import (
 
 	//REPOSITORIES
+	"log"
 	"time"
+
+	"gopkg.in/maddevsio/fcm.v1"
 
 	models "github.com/Aphofisis/po-comensales-anfitriones-notifications-tips/models"
 	notification_repository "github.com/Aphofisis/po-comensales-anfitriones-notifications-tips/repositories/notifications"
@@ -19,6 +22,27 @@ func AddNotification_Service(notification models.Mo_Notifications) (int, bool, s
 	if error_update != nil {
 		return 500, true, "Error en el servidor interno al intentar agregar el Notificacion, detalles: " + error_update.Error(), ""
 	}
+
+	/*=============FIREBASE CLOUD MESSAGE=============*/
+	data := map[string]string{
+		"msg": "Hello World1",
+		"sum": "Happy Day",
+	}
+	c := fcm.NewFCM("AAAAnX6Cb1g:APA91bESe-FuIIH2z_lv6JvWQX-r5hz_Ta6jRii-TwBZnqZQZBgSz9rSo5TIybr0RkznoQkY21WoA1yrdQUo0IuUWiZrrAIDLxzva5BZEoF4z5UPVIyFTv1-87_c8p_u3EDD93GiGQvf")
+	_, err := c.Send(fcm.Message{
+		Data:             data,
+		RegistrationIDs:  []string{"cxHlE6xFNYZpJJPD5Cz8JA:APA91bELN9h25_QCCCxa3RqQz49dASYlXHBGexgup7kFQyD8aDRiDcqDhQciFeCusSFUEX0UgTv3XWDxbKe2TZUtRgRU7nPfjLl8uWQTAovia3fJVhODnc_9NG9b0Bv3iepipAJUOouc"},
+		ContentAvailable: true,
+		Priority:         fcm.PriorityHigh,
+		Notification: fcm.Notification{
+			Title: "Hello",
+			Body:  "World",
+		},
+	})
+	if err != nil {
+		log.Fatal("Error en la conexión con Firebase Cloud Message, detalles: " + err.Error())
+	}
+	/*======================================*/
 
 	return 201, false, "", "Notificacion agregado correctamente"
 }
