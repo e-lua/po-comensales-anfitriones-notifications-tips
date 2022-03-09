@@ -3,6 +3,7 @@ package notifications
 import (
 
 	//REPOSITORIES
+	"fmt"
 	"log"
 	"time"
 
@@ -29,7 +30,7 @@ func AddNotification_Service(notification models.Mo_Notifications) (int, bool, s
 		"sum": "Happy Day",
 	}
 	c := fcm.NewFCM("AAAAnX6Cb1g:APA91bESe-FuIIH2z_lv6JvWQX-r5hz_Ta6jRii-TwBZnqZQZBgSz9rSo5TIybr0RkznoQkY21WoA1yrdQUo0IuUWiZrrAIDLxzva5BZEoF4z5UPVIyFTv1-87_c8p_u3EDD93GiGQvf")
-	_, err := c.Send(fcm.Message{
+	response, err := c.Send(fcm.Message{
 		Data:             data,
 		RegistrationIDs:  []string{"cxHlE6xFNYZpJJPD5Cz8JA:APA91bELN9h25_QCCCxa3RqQz49dASYlXHBGexgup7kFQyD8aDRiDcqDhQciFeCusSFUEX0UgTv3XWDxbKe2TZUtRgRU7nPfjLl8uWQTAovia3fJVhODnc_9NG9b0Bv3iepipAJUOouc"},
 		ContentAvailable: true,
@@ -43,6 +44,12 @@ func AddNotification_Service(notification models.Mo_Notifications) (int, bool, s
 		log.Fatal("Error en la conexión con Firebase Cloud Message, detalles: " + err.Error())
 	}
 	/*======================================*/
+
+	fmt.Println("Status Code   :", response.StatusCode)
+	fmt.Println("Success       :", response.Success)
+	fmt.Println("Fail          :", response.Fail)
+	fmt.Println("Canonical_ids :", response.CanonicalIDs)
+	fmt.Println("Topic MsgId   :", response.MsgID)
 
 	return 201, false, "", "Notificacion agregado correctamente"
 }
