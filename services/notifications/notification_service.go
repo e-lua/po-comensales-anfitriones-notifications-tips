@@ -30,7 +30,7 @@ func AddNotification_Service(notification models.Mo_Notifications) (int, bool, s
 	if notification.Priority == 1 && notification.TypeUser == 1 {
 
 		//Obtenemos los datos del auth
-		respuesta, _ := http.Get("http://a-registro-authenticacion.restoner-api.fun:5000/v1/export/" + strconv.Itoa(notification.IDUser))
+		respuesta, _ := http.Get("http://a-registro-authenticacion.restoner-api.fun:5000/v1/export?idbusiness=" + strconv.Itoa(notification.IDUser) + "&type=1")
 		var get_respuesta Income_IDDevice
 		error_decode_respuesta := json.NewDecoder(respuesta.Body).Decode(&get_respuesta)
 		if error_decode_respuesta != nil {
@@ -63,7 +63,7 @@ func AddNotification_Service(notification models.Mo_Notifications) (int, bool, s
 	if notification.Priority == 1 && notification.TypeUser == 2 {
 
 		//Obtenemos los datos del auth
-		respuesta, _ := http.Get("http://c-registro-authenticacion.restoner-api.fun:3000/v1/export/" + strconv.Itoa(notification.IDUser))
+		respuesta, _ := http.Get("http://c-registro-authenticacion.restoner-api.fun:3000/v1/export?idbusiness=" + strconv.Itoa(notification.IDUser) + "&type=1")
 		var get_respuesta Income_IDDevice
 		error_decode_respuesta := json.NewDecoder(respuesta.Body).Decode(&get_respuesta)
 		if error_decode_respuesta != nil {
