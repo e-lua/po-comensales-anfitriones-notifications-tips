@@ -19,6 +19,7 @@ type Mo_Tips struct {
 
 type Mo_Notifications struct {
 	ID             primitive.ObjectID `bson:"_id,omitempty" json:"id"`
+	Title          string             `bson:"title" json:"title,omitempty"`
 	Message        string             `bson:"message" json:"message,omitempty"`
 	DateRegistered time.Time          `bson:"dateregistered" json:"dateregistered,omitempty"`
 	IDUser         int                `bson:"iduser" json:"iduser,omitempty"`
