@@ -54,22 +54,11 @@ func (tr *tipsRouter_pg) AddTip(c echo.Context) error {
 
 func (tr *tipsRouter_pg) ShowTipsAll(c echo.Context) error {
 
-	//Obtenemos los datos del auth
-	status, boolerror, dataerror, data_idbusiness := GetJWT(c.Request().Header.Get("Authorization"), 2, 2, 1, 4)
-	if dataerror != "" {
-		results := Response{Error: boolerror, DataError: "000" + dataerror, Data: ""}
-		return c.JSON(status, results)
-	}
-	if data_idbusiness <= 0 {
-		results := Response{Error: true, DataError: "000" + "Token incorrecto", Data: ""}
-		return c.JSON(400, results)
-	}
-
 	type_string := c.Request().URL.Query().Get("typeuser")
 	type_int, _ := strconv.Atoi(type_string)
 
 	//Enviamos los datos al servicio
-	status, boolerror, dataerror, data := ShowTipsAll_Service(data_idbusiness, type_int)
+	status, boolerror, dataerror, data := ShowTipsAll_Service(type_int)
 	results := Response_Tips{Error: boolerror, DataError: dataerror, Data: data}
 	return c.JSON(status, results)
 }
