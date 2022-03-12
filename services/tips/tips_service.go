@@ -35,10 +35,5 @@ func ShowTipsAll_Service(idbusiness int, idtype_int int) (int, bool, string, []*
 		return 500, true, "Error en el servidor interno al intentar mostrar los tips, detalles: " + error_show.Error(), tips
 	}
 
-	//Obtenemos las categorias
-	error_update := tips_repository.Mo_Update(idbusiness, idtype_int)
-	if error_update != nil {
-		return 500, true, "Error en el servidor interno al intentar actualizar la vista en los tips, detalles: " + error_update.Error(), tips
-	}
 	return 201, false, "", tips
 }
