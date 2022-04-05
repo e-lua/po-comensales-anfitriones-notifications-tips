@@ -4,6 +4,7 @@ import (
 
 	//REPOSITORIES
 
+	"bytes"
 	"encoding/json"
 	"log"
 	"net/http"
@@ -27,11 +28,54 @@ func AddNotification_Service(notification models.Mo_Notifications) (int, bool, s
 		return 500, true, "Error en el servidor interno al intentar agregar el Notificacion, detalles: " + error_update.Error(), ""
 	}
 
-	/*==============ENVIO DE NOTIFICACIÓN A CIERTOS ANFITRIONES===================*/
+	/*==============ENVIO DE NOTIFICACIÓN A UN ANFITRION===================*/
 	if notification.Priority == 1 && notification.TypeUser == 1 {
 
 		//Obtenemos los datos del auth
-		respuesta, _ := http.Get("http://a-registro-authenticacion.restoner-api.fun:5000/v1/export?idbusiness=" + strconv.Itoa(notification.IDUser) + "&type=1")
+		send_to_get_idbusiness := map[string]interface{}{
+			"idbusiness": notification.IDUser,
+			"type":       1,
+		}
+		json_data, _ := json.Marshal(send_to_get_idbusiness)
+		respuesta, _ := http.Post("http://a-registro-authenticacion.restoner-api.fun:5000/v1/export", "application/json", bytes.NewBuffer(json_data))
+		var get_respuesta Income_IDDevice
+		error_decode_respuesta := json.NewDecoder(respuesta.Body).Decode(&get_respuesta)
+		if error_decode_respuesta != nil {
+			return 500, true, "Error en el sevidor interno al intentar obtener todos los ID Device, detalles: " + error_decode_respuesta.Error(), ""
+		}
+
+		/*=============FIREBASE CLOUD MESSAGE=============*/
+		data := map[string]string{
+			"msg": notification.Message,
+			"sum": notification.Message,
+		}
+		c := fcm.NewFCM("AAAAnX6Cb1g:APA91bESe-FuIIH2z_lv6JvWQX-r5hz_Ta6jRii-TwBZnqZQZBgSz9rSo5TIybr0RkznoQkY21WoA1yrdQUo0IuUWiZrrAIDLxzva5BZEoF4z5UPVIyFTv1-87_c8p_u3EDD93GiGQvf")
+		_, err := c.Send(fcm.Message{
+			Data:             data,
+			RegistrationIDs:  get_respuesta.Data,
+			ContentAvailable: true,
+			Priority:         fcm.PriorityHigh,
+			Notification: fcm.Notification{
+				Title: notification.Title,
+				Body:  notification.Message,
+			},
+		})
+		if err != nil {
+			log.Fatal("Error en la conexión con Firebase Cloud Message, detalles: " + err.Error())
+		}
+
+	}
+	/*============================================================================*/
+
+	/*=============ENVIO DE NOTIFICACIÓN A ALGUNOS ANFITRIONES==================*/
+	if notification.Priority == 1 && notification.TypeUser == 6 {
+
+		//Obtenemos los datos del auth
+		send_to_get_idbusiness := map[string]interface{}{
+			"type": 2,
+		}
+		json_data, _ := json.Marshal(send_to_get_idbusiness)
+		respuesta, _ := http.Post("http://a-registro-authenticacion.restoner-api.fun:5000/v1/export", "application/json", bytes.NewBuffer(json_data))
 		var get_respuesta Income_IDDevice
 		error_decode_respuesta := json.NewDecoder(respuesta.Body).Decode(&get_respuesta)
 		if error_decode_respuesta != nil {
@@ -65,7 +109,11 @@ func AddNotification_Service(notification models.Mo_Notifications) (int, bool, s
 	if notification.Priority == 1 && notification.TypeUser == 4 {
 
 		//Obtenemos los datos del auth
-		respuesta, _ := http.Get("http://a-registro-authenticacion.restoner-api.fun:5000/v1/export?type=2")
+		send_to_get_idbusiness := map[string]interface{}{
+			"type": 3,
+		}
+		json_data, _ := json.Marshal(send_to_get_idbusiness)
+		respuesta, _ := http.Post("http://a-registro-authenticacion.restoner-api.fun:5000/v1/export", "application/json", bytes.NewBuffer(json_data))
 		var get_respuesta Income_IDDevice
 		error_decode_respuesta := json.NewDecoder(respuesta.Body).Decode(&get_respuesta)
 		if error_decode_respuesta != nil {
@@ -95,7 +143,7 @@ func AddNotification_Service(notification models.Mo_Notifications) (int, bool, s
 	}
 	/*============================================================================*/
 
-	/*==================ENVIO DE NOTIFICACIÓN A CIERTOS COMENSALES=================*/
+	/*==================ENVIO DE NOTIFICACIÓN A UN COMENSAL=================*/
 	if notification.Priority == 1 && notification.TypeUser == 2 {
 
 		//Obtenemos los datos del auth
