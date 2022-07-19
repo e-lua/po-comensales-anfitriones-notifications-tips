@@ -37,7 +37,7 @@ func AddNotification_Service(notification models.Mo_Notifications) (int, bool, s
 			"type":       1,
 		}
 		json_data, _ := json.Marshal(send_to_get_idbusiness)
-		respuesta, _ := http.Post("http://a-registro-authenticacion.restoner-api.fun:5000/v1/export", "application/json", bytes.NewBuffer(json_data))
+		respuesta, _ := http.Post("http://a-registro-authenticacion.restoner-api.fun:80/v1/export", "application/json", bytes.NewBuffer(json_data))
 		var get_respuesta Income_IDDevice
 		error_decode_respuesta := json.NewDecoder(respuesta.Body).Decode(&get_respuesta)
 		if error_decode_respuesta != nil {
@@ -75,7 +75,7 @@ func AddNotification_Service(notification models.Mo_Notifications) (int, bool, s
 			"type": 2,
 		}
 		json_data, _ := json.Marshal(send_to_get_idbusiness)
-		respuesta, _ := http.Post("http://a-registro-authenticacion.restoner-api.fun:5000/v1/export", "application/json", bytes.NewBuffer(json_data))
+		respuesta, _ := http.Post("http://a-registro-authenticacion.restoner-api.fun:80/v1/export", "application/json", bytes.NewBuffer(json_data))
 		var get_respuesta Income_IDDevice
 		error_decode_respuesta := json.NewDecoder(respuesta.Body).Decode(&get_respuesta)
 		if error_decode_respuesta != nil {
@@ -113,7 +113,7 @@ func AddNotification_Service(notification models.Mo_Notifications) (int, bool, s
 			"type": 3,
 		}
 		json_data, _ := json.Marshal(send_to_get_idbusiness)
-		respuesta, _ := http.Post("http://a-registro-authenticacion.restoner-api.fun:5000/v1/export", "application/json", bytes.NewBuffer(json_data))
+		respuesta, _ := http.Post("http://a-registro-authenticacion.restoner-api.fun:80/v1/export", "application/json", bytes.NewBuffer(json_data))
 		var get_respuesta Income_IDDevice
 		error_decode_respuesta := json.NewDecoder(respuesta.Body).Decode(&get_respuesta)
 		if error_decode_respuesta != nil {

@@ -1,17 +1,13 @@
 version: "3.3"
 
 services: 
-  app:
-    container_name: restoneranfitrion_app_servicio_informacion_completa
+  c-a-legal-and-billing:
     restart: always 
     build: .
     labels: 
-      - "traefik.enable=true"
-      - "traefik.http.routers.app.rule=Host(`localhost`)"
+      - "traefik.http.routers.c-a-legal-and-billing.rule=Host(`c-a-legal-and-billing.restoner-api.fun`)"
     networks:
       - backend
-    ports:
-      - "5800:5000"
     links:
       - mongo
   mongo:
@@ -21,6 +17,8 @@ services:
       - backend
     ports:
       - "27017:27017"
+    volumes: 
+      - shared_database:/data/db
     environment:
       MONGO_INITDB_ROOT_USERNAME: mongodbbusiness_user
       MONGO_INITDB_ROOT_PASSWORD: mongodb1150
@@ -37,14 +35,13 @@ services:
       ME_CONFIG_BASICAUTH_USERNAME: mongosicagguthfw2345f
       ME_CONFIG_BASICAUTH_PASSWORD: dasd23GGFa43dfe5fuj6c
       ME_CONFIG_MONGODB_URL: mongodb://mongodbbusiness_user:mongodb1150@mongo:27017/
-  traefik: # apache.app.test - nginx.app.test
+  traefik:
     image: traefik:v2.3.6
-    labels: 
-      - "traefik.http.routers.api.rule=Host(`localhost`)"
     ports: 
-      - 100:80
-      - 9004:8080
+      - 5800:80
       - 443:443
+    networks:
+      - backend
     volumes: 
       - /var/run/docker.sock:/var/run/docker.sock
       - ./traefik.yml:/traefik.yml
@@ -55,7 +52,8 @@ networks:
     driver: bridge
     ipam: 
       driver: default 
-
+volumes:
+  shared_database:
 
 
 

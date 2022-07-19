@@ -17,7 +17,7 @@ type tipsRouter_pg struct {
 /*----------------------TRAEMOS LOS DATOS DEL AUTENTICADOR----------------------*/
 func GetJWT(jwt string, service int, module int, epic int, endpoint int) (int, bool, string, int) {
 	//Obtenemos los datos del auth
-	respuesta, _ := http.Get("http://a-registro-authenticacion.restoner-api.fun:5000/v1/trylogin?jwt=" + jwt + "&service=" + strconv.Itoa(service) + "&module=" + strconv.Itoa(module) + "&epic=" + strconv.Itoa(epic) + "&endpoint=" + strconv.Itoa(endpoint))
+	respuesta, _ := http.Get("http://a-registro-authenticacion.restoner-api.fun:80/v1/trylogin?jwt=" + jwt + "&service=" + strconv.Itoa(service) + "&module=" + strconv.Itoa(module) + "&epic=" + strconv.Itoa(epic) + "&endpoint=" + strconv.Itoa(endpoint))
 	var get_respuesta ResponseJWT
 	error_decode_respuesta := json.NewDecoder(respuesta.Body).Decode(&get_respuesta)
 	if error_decode_respuesta != nil {
