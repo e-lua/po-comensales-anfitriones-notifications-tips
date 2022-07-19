@@ -1,11 +1,11 @@
 version: "3.3"
 
 services: 
-  c-a-legal-and-billing:
+  c-a-notificacion-tip:
     restart: always 
     build: .
     labels: 
-      - "traefik.http.routers.c-a-legal-and-billing.rule=Host(`c-a-legal-and-billing.restoner-api.fun`)"
+      - "traefik.http.routers.c-a-notificacion-tip.rule=Host(`c-a-notificacion-tip.restoner-api.fun`)"
     networks:
       - backend
     links:
