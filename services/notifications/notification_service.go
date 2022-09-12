@@ -72,7 +72,8 @@ func AddNotification_Service(notification models.Mo_Notifications) (int, bool, s
 
 		//Obtenemos los datos del auth
 		send_to_get_idbusiness := map[string]interface{}{
-			"type": 2,
+			"type":           2,
+			"manybusinesses": notification.MultipleUser,
 		}
 		json_data, _ := json.Marshal(send_to_get_idbusiness)
 		respuesta, _ := http.Post("http://a-registro-authenticacion.restoner-api.fun:80/v1/export", "application/json", bytes.NewBuffer(json_data))
@@ -130,7 +131,7 @@ func AddNotification_Service(notification models.Mo_Notifications) (int, bool, s
 			Data:             data,
 			RegistrationIDs:  get_respuesta.Data,
 			ContentAvailable: true,
-			Priority:         fcm.PriorityHigh,
+			Priority:         fcm.PriorityNormal,
 			Notification: fcm.Notification{
 				Title: notification.Title,
 				Body:  notification.Message,

@@ -41,3 +41,9 @@ type Mo_TipsShow struct {
 	URLimg  string             `bson:"urlimg" json:"urlimg,omitempty"`
 	Typetip int                `bson:"typetip" json:"typetip,omitempty"`
 }
+
+type Mo_Anfitrion_PlanBusiness struct {
+	ID             primitive.ObjectID `bson:"_id,omitempty" json:"id"`
+	IdBusiness     int                `bson:"idbusiness" json:"idbusiness"`
+	DateRegistered time.Time          `bson:"dateregistered" json:"dateregistered"`
+}
