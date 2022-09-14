@@ -121,24 +121,31 @@ func AddNotification_Service(notification models.Mo_Notifications) (int, bool, s
 			return 500, true, "Error en el sevidor interno al intentar obtener todos los ID Device, detalles: " + error_decode_respuesta.Error(), ""
 		}
 
-		/*=============FIREBASE CLOUD MESSAGE=============*/
-		data := map[string]string{
-			"msg": notification.Message,
-			"sum": notification.Message,
-		}
-		c := fcm.NewFCM("AAAAnX6Cb1g:APA91bESe-FuIIH2z_lv6JvWQX-r5hz_Ta6jRii-TwBZnqZQZBgSz9rSo5TIybr0RkznoQkY21WoA1yrdQUo0IuUWiZrrAIDLxzva5BZEoF4z5UPVIyFTv1-87_c8p_u3EDD93GiGQvf")
-		_, err := c.Send(fcm.Message{
-			Data:             data,
-			RegistrationIDs:  get_respuesta.Data,
-			ContentAvailable: true,
-			Priority:         fcm.PriorityNormal,
-			Notification: fcm.Notification{
-				Title: notification.Title,
-				Body:  notification.Message,
-			},
-		})
-		if err != nil {
-			log.Fatal("Error en la conexión con Firebase Cloud Message, detalles: " + err.Error())
+		for _, iddeviceas_one := range get_respuesta.Data {
+
+			//Buscamos que no se envien duplicados
+			var iddevices_m []string
+			iddevices_m = append(iddevices_m, iddeviceas_one)
+
+			/*=============FIREBASE CLOUD MESSAGE=============*/
+			data := map[string]string{
+				"msg": notification.Message,
+				"sum": notification.Message,
+			}
+			c := fcm.NewFCM("AAAAnX6Cb1g:APA91bESe-FuIIH2z_lv6JvWQX-r5hz_Ta6jRii-TwBZnqZQZBgSz9rSo5TIybr0RkznoQkY21WoA1yrdQUo0IuUWiZrrAIDLxzva5BZEoF4z5UPVIyFTv1-87_c8p_u3EDD93GiGQvf")
+			_, err := c.Send(fcm.Message{
+				Data:             data,
+				RegistrationIDs:  iddevices_m,
+				ContentAvailable: true,
+				Priority:         fcm.PriorityNormal,
+				Notification: fcm.Notification{
+					Title: notification.Title,
+					Body:  notification.Message,
+				},
+			})
+			if err != nil {
+				log.Println("Error en la conexión con Firebase Cloud Message, detalles: " + err.Error())
+			}
 		}
 
 	}
