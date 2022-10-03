@@ -17,7 +17,7 @@ func Pg_Update(iduser int, typeuser int) error {
 	db := models.Conectar_Pg_DB()
 
 	//Actualizamos la foto de la categoría
-	q := "UPDATE Notification SET wasview=true WHERE iduser=$5 AND typeuser=$6"
+	q := "UPDATE Notification SET wasview=true WHERE iduser=$1 AND typeuser=$2"
 	if _, err_update := db.Exec(ctx, q, iduser, typeuser); err_update != nil {
 		return err_update
 	}

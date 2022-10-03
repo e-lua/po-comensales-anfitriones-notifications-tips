@@ -66,8 +66,22 @@ func (nr *notificationsRouter_pg) ShowNotification(c echo.Context) error {
 	type_string := c.Request().URL.Query().Get("typeuser")
 	type_int, _ := strconv.Atoi(type_string)
 
+	var offset int
+	if page_int == 1 {
+		offset = 0
+	} else {
+		offset = limit_int
+	}
+
+	var limite int
+	if limit_int == 0 {
+		limite = 20
+	} else {
+		limite = limit_int
+	}
+
 	//Enviamos los datos al servicio
-	status, boolerror, dataerror, data := ShowNotification_Service(user_int, limit_int, page_int, type_int)
+	status, boolerror, dataerror, data := ShowNotification_Service(user_int, limite, offset, type_int)
 	results := Response_Notifications{Error: boolerror, DataError: dataerror, Data: data}
 	return c.JSON(status, results)
 }
