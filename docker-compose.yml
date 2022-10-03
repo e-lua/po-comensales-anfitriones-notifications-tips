@@ -71,8 +71,10 @@ networks:
     ipam: 
       driver: default 
 volumes:
+  postgresql_master_data:
   shared_database:
-
+  cache:
+    driver: local
 
 
 
