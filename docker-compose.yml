@@ -9,32 +9,51 @@ services:
     networks:
       - backend
     links:
+      - redis
+      - postgres-master
       - mongo
-  mongo:
-    image: mongo
+  redis:
+    container_name: redis_db
     restart: always
+    image: "redis:6.0.16"
     networks:
       - backend
-    ports:
-      - "4520:27017"
     volumes: 
-      - shared_database:/data/db
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: mongodbbusiness_user
-      MONGO_INITDB_ROOT_PASSWORD: mongodb1150
-  mongo-express:
-    image: mongo-express
+      - cache:/data
+    ports: 
+      - "6000:6379"
+  postgres-master:
     restart: always
-    ports:
-      - "9001:8081"
+    image: "bitnami/postgresql:13"
     networks:
       - backend
+    ports:
+      - "8620:5432"
+    volumes:
+      - 'postgresql_master_data:/bitnami/postgresql'
     environment:
-      ME_CONFIG_MONGODB_ADMINUSERNAME: mongobusiness_user
-      ME_CONFIG_MONGODB_ADMINPASSWORD: mongodb4d2s
-      ME_CONFIG_BASICAUTH_USERNAME: mongosicagguthfw2345f
-      ME_CONFIG_BASICAUTH_PASSWORD: dasd23GGFa43dfe5fuj6c
-      ME_CONFIG_MONGODB_URL: mongodb://mongodbbusiness_user:mongodb1150@mongo:27017/
+      - POSTGRESQL_REPLICATION_MODE=master
+      - DATABASE_HOST=127.0.0.1
+      - POSTGRESQL_REPLICATION_USER=replicacion_usuasdaario_123f24
+      - POSTGRESQL_REPLICATION_PASSWORD=replicacion_casdq41dontrasenia_123f24
+      - POSTGRESQL_USERNAME=postgresxv7
+      - POSTGRESQL_PASSWORD=4kdfghklfg1463hadgkj45345M
+      - POSTGRESQL_DATABASE=postgresxv7
+  postgresql-slave:
+    image: 'bitnami/postgresql:13'
+    ports:
+      - "6432:5432"
+    networks:
+      - backend
+    depends_on:
+      - postgres-master
+    environment:
+      - POSTGRESQL_REPLICATION_MODE=slave
+      - POSTGRESQL_REPLICATION_USER=replicacion_usuasdaario_123f24
+      - POSTGRESQL_REPLICATION_PASSWORD=replicacion_casdq41dontrasenia_123f24
+      - POSTGRESQL_MASTER_HOST=postgres-master
+      - POSTGRESQL_PASSWORD=4kdfghklfg1463hadgkj45345M
+      - POSTGRESQL_MASTER_PORT_NUMBER=5432
   traefik:
     image: traefik:v2.3.6
     ports: 

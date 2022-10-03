@@ -11,7 +11,7 @@ type Response struct {
 type Response_Notifications struct {
 	Error     bool                         `json:"error"`
 	DataError string                       `json:"dataError"`
-	Data      []models.Mo_NotificationShow `json:"data"`
+	Data      []models.Pg_NotificationShow `json:"data"`
 }
 
 type ResponseJWT struct {

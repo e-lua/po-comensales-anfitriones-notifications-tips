@@ -15,7 +15,6 @@ import (
 	"github.com/Aphofisis/po-comensales-anfitriones-notifications-tips/models"
 	notification "github.com/Aphofisis/po-comensales-anfitriones-notifications-tips/services/notifications"
 	planbusiness "github.com/Aphofisis/po-comensales-anfitriones-notifications-tips/services/planbusiness"
-	tip "github.com/Aphofisis/po-comensales-anfitriones-notifications-tips/services/tips"
 )
 
 func Manejadores() {
@@ -33,11 +32,6 @@ func Manejadores() {
 	version_1 := e.Group("/v1")
 
 	/*====================FLUJO DE INFORMACIÓN====================*/
-
-	//V1 FROM V1 TO ...TO ENTITY TIP
-	router_tip := version_1.Group("/tip")
-	router_tip.POST("", tip.TipsRouter_pg.AddTip)
-	router_tip.GET("", tip.TipsRouter_pg.ShowTipsAll)
 
 	//V1 FROM V1 TO ...TO ENTITY TIP
 	router_notification := version_1.Group("/notification")

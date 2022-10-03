@@ -31,7 +31,7 @@ func GetJWT(jwt string, service int, module int, epic int, endpoint int) (int, b
 func (nr *notificationsRouter_pg) AddNotification(c echo.Context) error {
 
 	//Instanciamos una variable del modelo B_Name
-	var notification models.Mo_Notifications
+	var notification models.Pg_Notifications
 
 	//Agregamos los valores enviados a la variable creada
 	err := c.Bind(&notification)
@@ -57,14 +57,17 @@ func (nr *notificationsRouter_pg) ShowNotification(c echo.Context) error {
 	user_string := c.Request().URL.Query().Get("user")
 	user_int, _ := strconv.Atoi(user_string)
 
+	limit_string := c.Request().URL.Query().Get("limit")
+	limit_int, _ := strconv.Atoi(limit_string)
+
 	page_string := c.Request().URL.Query().Get("page")
-	page_int, _ := strconv.ParseInt(page_string, 10, 64)
+	page_int, _ := strconv.Atoi(page_string)
 
 	type_string := c.Request().URL.Query().Get("typeuser")
 	type_int, _ := strconv.Atoi(type_string)
 
 	//Enviamos los datos al servicio
-	status, boolerror, dataerror, data := ShowNotification_Service(user_int, page_int, type_int)
+	status, boolerror, dataerror, data := ShowNotification_Service(user_int, limit_int, page_int, type_int)
 	results := Response_Notifications{Error: boolerror, DataError: dataerror, Data: data}
 	return c.JSON(status, results)
 }
